@@ -14,22 +14,73 @@
   </head>
   
   <body>
-	<input id="tracking-link-input"></input><button onclick="addTrackingLink()">Click to add</button>
-	<div id="map"></div>
+	
+	<div style="display:none" id="sidebar">
+	  <div>
+	  <button onclick="closeNavbar()">&#9776;</button>
+	  </div>
+	  <div>
+		 <form>
+		   <label for="tracking-name-input">Display Name:</label>
+		   <input type="text" id="tracking-name-input" name="tracking-name-input">
+
+		   <label for="tracking-link-input">Tracking Link:</label>
+		   <input type="text" id="tracking-link-input" name="tracking-link-input">
+
+		   <input type="button" onclick="addTrackingLink()" value="Clickt To Add">
+		 </form> 
+	  </div>
+	  <div>
+		<h3>Currently Tracking:</h3>
+	  <ol id="tracking-list">
+		
+	  </ol>
+	  </div>
+	</div>
+
+	<div id="main">
+	  <button id="open-nav" onclick="openNavbar()">&#9776;</button>
+	  <b id="nav-header">Simple Group Tracking</b> 
+	  <div id="map"></div>
+	</div>
 	<script type="text/javascript" src="./group_track.js"></script>
 	<script type="text/javascript">
 	  var map = L.map('map').setView([0, 0], 13);
 	  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 	  }).addTo(map);
-	  var trackCollection = new TrackCollection(map, L);
+
+	  var list = document.getElementById("tracking-list");
+	  var trackCollection = new TrackCollection(map, L, list);
 
 	  setInterval(()=>trackCollection.updatePositions(),1000);
 	  
 	  function addTrackingLink() {
-		  		  var theLink = document.getElementById("tracking-link-input").value;
-		  trackCollection.add(theLink, theLink);
+		  var theLink = document.getElementById("tracking-link-input").value;
+		  var theName = document.getElementById("tracking-name-input").value;
+		  trackCollection.add(theName, theLink);	  
 	  }
-	</script>	
+	  
+	  function removeTrackingLink(name, url) {
+		  trackCollection.remove(name, url);
+	  }
+
+	  function openNavbar() {
+		  document.getElementById("main").style.marginTop = "20%";
+		  document.getElementById("sidebar").style.height = "20%";
+		  document.getElementById("sidebar").style.display = "block";
+		  document.getElementById("nav-header").style.display = "none";
+		  document.getElementById("open-nav").style.display = "none";
+	  }
+	  
+	  function closeNavbar() {
+		  document.getElementById("main").style.marginTop = "0%";
+		  document.getElementById("main").style.display = "block";	
+		  document.getElementById("sidebar").style.display = "none";
+		  document.getElementById("open-nav").style.display = "inline-block";
+		  document.getElementById("nav-header").style.display = "inline-block";
+	  }
+
+	</script>
   </body>
 </html>

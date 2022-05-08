@@ -36,25 +36,56 @@ class ActivityTrack {
 }
 
 class TrackCollection {
-	constructor(map, leaflet) {
+	constructor(map, leaflet, list) {
 		this.allLinks = [];
 		this.map = map;
+		this.colorIndex = 0;
 		this.colors = ["red", "green", "blue", "orange"];
 		this.leaflet = leaflet;
+		this.list = list;
 	}
 
 	add(name, url) {
 		console.log("Adding "+url);
-		var findResult = this.allLinks.findIndex((elem) => elem.link === url); 
-		if(findResult != -1) {
-			console.log(url + " already in the list, not adding, result was "+findResult);
+		var found = this.allLinks.findIndex((elem) => elem.link === url || elem.name === name);
+		
+		if(found != -1) {
+			console.log(url + " or "+name+" already in the list, not adding");
 			return;
 		}
-		var color = this.colors[this.allLinks.length];
+		
+		var color = this.colors[this.colorIndex];
+		this.colorIndex = (this.colorIndex + 1) % this.colors.length;
 		var track = new ActivityTrack(name, url, color);
 		this.allLinks.push(track);
+		this.addToList(name, url, color);
 	}
 
+	addToList(name, url, color) {
+		var item = document.createElement("li");
+		item.id = this.makeId(name, url);
+		var value = document.createTextNode(name);
+        item.appendChild(value);
+		item.style.color = color;
+		var deleteButton = document.createElement("button");
+		deleteButton.value = "X";
+		deleteButton.style.margin = "1em";
+		deleteButton.appendChild(document.createTextNode("X"));
+		deleteButton.addEventListener("click", () => removeTrackingLink(name, url), false);
+		item.append(deleteButton);
+        this.list.appendChild(item);
+	}
+
+	makeId(name, url) {
+		return name+":"+url;
+	}
+
+	remove(name, url) {
+		this.allLinks = this.allLinks.filter((elem) => !(elem.link === url && elem.name === name));
+		document.getElementById(this.makeId(name,url)).remove();
+	}
+		
+		
 	updatePositions() {
 		console.log("updating positions");
 		this.allLinks.forEach((link) => link.updateOn(this.leaflet, this.map));
