@@ -15,34 +15,19 @@
   
   <body>
 	
-	<div style="display:none" id="sidebar">
-	  <div>
-	  <button onclick="closeNavbar()">&#9776;</button>
-	  </div>
-	  <div>
-		 <form>
-		   <label for="tracking-name-input">Display Name:</label>
-		   <input type="text" id="tracking-name-input" name="tracking-name-input">
+	<form>
+	  <label for="tracking-name-input">Display Name:</label>
+	  <input type="text" id="tracking-name-input" name="tracking-name-input">
 
-		   <label for="tracking-link-input">Tracking Link:</label>
-		   <input type="text" id="tracking-link-input" name="tracking-link-input">
+	  <label for="tracking-link-input">Tracking Link:</label>
+	  <input type="text" id="tracking-link-input" name="tracking-link-input">
 
-		   <input type="button" onclick="addTrackingLink()" value="Clickt To Add">
-		 </form> 
-	  </div>
-	  <div>
-		<h3>Currently Tracking:</h3>
-	  <ol id="tracking-list">
-		
-	  </ol>
-	  </div>
-	</div>
+	  <input type="button" onclick="addTrackingLink()" value="Clickt To Add">
+	</form> 
 
-	<div id="main">
-	  <button id="open-nav" onclick="openNavbar()">&#9776;</button>
-	  <b id="nav-header">Simple Group Tracking</b> 
-	  <div id="map"></div>
-	</div>
+
+	<div id="map"></div>
+
 	<script type="text/javascript" src="./group_track.js"></script>
 	<script type="text/javascript">
 	  var map = L.map('map').setView([0, 0], 13);

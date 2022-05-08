@@ -42,7 +42,8 @@ class TrackCollection {
 		this.colorIndex = 0;
 		this.colors = ["red", "green", "blue", "orange"];
 		this.leaflet = leaflet;
-		this.list = list;
+		this.list = document.createElement("ol");//list;
+		this.addLegend(leaflet, map);
 	}
 
 	add(name, url) {
@@ -64,12 +65,13 @@ class TrackCollection {
 	addToList(name, url, color) {
 		var item = document.createElement("li");
 		item.id = this.makeId(name, url);
+		var strong = document.createElement("b");
 		var value = document.createTextNode(name);
-        item.appendChild(value);
+		strong.appendChild(value);
+        item.appendChild(strong);
 		item.style.color = color;
 		var deleteButton = document.createElement("button");
 		deleteButton.value = "X";
-		deleteButton.style.margin = "1em";
 		deleteButton.appendChild(document.createTextNode("X"));
 		deleteButton.addEventListener("click", () => removeTrackingLink(name, url), false);
 		item.append(deleteButton);
@@ -89,5 +91,16 @@ class TrackCollection {
 	updatePositions() {
 		console.log("updating positions");
 		this.allLinks.forEach((link) => link.updateOn(this.leaflet, this.map));
+	}
+
+	addLegend(leaflet, map) {
+		var legend = leaflet.control({ position: "bottomleft" });
+		var self = this;
+		legend.onAdd = function(map) {
+			var div = leaflet.DomUtil.create("div", "legend");
+			div.appendChild(self.list);			
+			return div;
+		};
+		legend.addTo(map);
 	}
 }
